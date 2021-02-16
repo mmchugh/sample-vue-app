@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dangerous App</title>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <select v-model="selected" v-on:change="posts=[]">
+      <option disabled value="">Please select a user</option>
+      <option v-for="user in users" v-bind:value="user">
+        {{ user.name }}
+      </option>
+    </select>
+    <div v-if="selected">
+      Name: {{ selected.name }} <br />
+      Email: {{ selected.email }} <br />
+      Address: <button v-on:click="show_address = !show_address">{{ show_address ? 'Hide' : 'Show' }}</button>
+      <div v-if="show_address">
+        Street: {{ selected.address.street }} <br />
+        Suite: {{ selected.address.suite }} <br />
+        City: {{ selected.address.city }} <br />
+      </div>
+      <button v-if="!posts.length" v-on:click="show_posts">Load Posts</button>
+      <div v-if="posts">
+        <div v-for="post in posts">
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.body }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var BASE_URL = 'https://jsonplaceholder.typicode.com/users/'
+    var app = new Vue({
+      el: '#app',
+      data: {
+        selected: '',
+        users: [],
+        posts: [],
+        show_address: false
+      },
+      methods: {
+        show_posts: function () {
+          var posts_url = BASE_URL + this.selected.id + '/posts'
+          axios.get(posts_url)
+            .then(response => this.posts = response.data)
+        }
+      },
+      mounted() {
+        axios.get(BASE_URL)
+          .then(response => this.users = response.data)
+      }
+    })
+  </script>
+</body>
+</html>
