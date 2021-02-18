@@ -1,36 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dangerous App</title>
+  <title>User details</title>
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 </head>
 <body>
-  <div id="app">
-    <select v-model="selected" v-on:change="posts=[]">
-      <option disabled value="">Please select a user</option>
-      <option v-for="user in users" v-bind:value="user">
-        {{ user.name }}
-      </option>
-    </select>
-    <div v-if="selected">
-      Name: {{ selected.name }} <br />
-      Email: {{ selected.email }} <br />
-      Address: <button v-on:click="show_address = !show_address">{{ show_address ? 'Hide' : 'Show' }}</button>
-      <div v-if="show_address">
-        Street: {{ selected.address.street }} <br />
-        Suite: {{ selected.address.suite }} <br />
-        City: {{ selected.address.city }} <br />
-      </div>
-      <button v-if="!posts.length" v-on:click="show_posts">Load Posts</button>
-      <div v-if="posts">
-        <div v-for="post in posts">
-          <h3>{{ post.title }}</h3>
-          <p>{{ post.body }}</p>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        User Details
+      </h1>
+      <div id="app">
+        <div class="columns">
+          <div class="column">
+            <select v-model="selected" v-on:change="posts=[]">
+              <option disabled value="">Please select a user</option>
+              <option v-for="user in users" v-bind:value="user">
+                {{ user.name }}
+              </option>
+            </select>
+            <div v-if="selected">
+              <table class="table">
+                <tr>
+                  <td>Name</td>
+                  <td>{{ selected.name }}</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>{{ selected.email }}</td>
+                </tr>
+                <tr>
+                  <td>Address</td>
+                  <td><button v-on:click="show_address = !show_address">{{ show_address ? 'Hide' : 'Show' }}</button></td>
+                </tr>
+              </table>
+              <div v-if="show_address">
+                Street: {{ selected.address.street }} <br />
+                Suite: {{ selected.address.suite }} <br />
+                City: {{ selected.address.city }} <br />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <button v-if="!posts.length && selected" v-on:click="show_posts">Load Posts</button>
+            <div v-if="posts">
+              <div v-for="post in posts">
+                <h2 class="title">{{ post.title }}</h3>
+                <p>{{ post.body }}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+  </section>
 
   <script>
     var BASE_URL = 'https://jsonplaceholder.typicode.com/users/'
